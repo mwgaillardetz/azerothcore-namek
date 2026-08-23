@@ -2,7 +2,7 @@
 
 <img src="https://static.wikia.nocookie.net/dragonball/images/4/43/NamekGreenPlanet.png/revision/latest/thumbnail/width/360/height/360?cb=20100731172310" alt="Planet Namek" width="110">
 
-This is my containerized AzerothCore 3.3.5a setup. It includes Playerbots, my module collection, server configuration, low-level bot mounts, and a 24-slot bag for every newly created character.
+A custom containerized rendition of World of Warcraft - Wrath of the Litch King (3.3.5a). It includes Playerbots, my module collection, server configuration, low-level bot mounts, and a 24-slot bag for every newly created character.
 
 ## Server setup
 
