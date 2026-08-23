@@ -1,0 +1,7 @@
+.env
+azerothcore-wotlk/
+runtime/logs/
+runtime/data/
+*.log
+*.sql.gz
+
