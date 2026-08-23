@@ -1,5 +1,7 @@
 # azerothcore-namek
 
+<img src="https://static.wikia.nocookie.net/dragonball/images/4/43/NamekGreenPlanet.png/revision/latest/thumbnail/width/360/height/360?cb=20100731172310" alt="Planet Namek" width="110">
+
 This is my containerized AzerothCore 3.3.5a setup. It includes Playerbots, my module collection, server configuration, low-level bot mounts, and a 24-slot bag for every newly created character.
 
 ## Server setup
@@ -36,3 +38,7 @@ set realmlist 192.168.1.100
 
 Delete the client's `Cache` folder if old client data is still showing, then launch the game.
 
+<<<<<<< HEAD
+=======
+Do not commit API keys, database dumps, account data, or the generated `.env` file.
+>>>>>>> 77cfd39 (Add Planet Namek image to README)
