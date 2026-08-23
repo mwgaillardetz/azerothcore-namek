@@ -1,0 +1,9 @@
+# Add these values to the live mod_llm_chatter.conf.
+# No API keys or database credentials are stored in this archive.
+
+LLMChatter.ChatterMode = hybrid
+LLMChatter.HumanConversationChance = 85
+
+# Persistent generated backgrounds remain enabled. Human-mode proximity
+# prompts use them frequently as private context without reciting them.
+LLMChatter.Backstory.Enable = 1
