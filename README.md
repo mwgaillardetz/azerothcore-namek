@@ -1,6 +1,6 @@
 # azerothcore-namek
 
-This is my containerized AzerothCore 3.3.5a setup. It includes Playerbots, my module collection, my current server configuration, low-level bot mounts, learned-spell changes, and a 24-slot bag for every newly created character.
+This is my containerized AzerothCore 3.3.5a setup. It includes Playerbots, my module collection, server configuration, low-level bot mounts, and a 24-slot bag for every newly created character.
 
 ## Server setup
 
@@ -35,6 +35,4 @@ set realmlist 192.168.1.100
 ```
 
 Delete the client's `Cache` folder if old client data is still showing, then launch the game.
-
-Do not commit API keys, database dumps, account data, or the generated `.env` file.
 
