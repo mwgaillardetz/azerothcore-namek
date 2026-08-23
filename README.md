@@ -37,8 +37,3 @@ set realmlist 192.168.1.100
 ```
 
 Delete the client's `Cache` folder if old client data is still showing, then launch the game.
-
-<<<<<<< HEAD
-=======
-Do not commit API keys, database dumps, account data, or the generated `.env` file.
->>>>>>> 77cfd39 (Add Planet Namek image to README)
