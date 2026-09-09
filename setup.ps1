@@ -20,9 +20,18 @@ if (-not (Test-Path -LiteralPath $serverRoot)) {
 }
 
 New-Item -ItemType Directory -Force -Path (Join-Path $runtimeRoot 'etc'), (Join-Path $runtimeRoot 'logs') | Out-Null
-Copy-Item -Path (Join-Path $repoRoot 'config\*') -Destination (Join-Path $runtimeRoot 'etc') -Recurse -Force
+$configRoot = Join-Path $repoRoot 'config'
+Get-ChildItem -LiteralPath $configRoot -Recurse -File | ForEach-Object {
+    $relativePath = $_.FullName.Substring($configRoot.Length + 1)
+    $destination = Join-Path (Join-Path $runtimeRoot 'etc') $relativePath
+    if (-not (Test-Path -LiteralPath $destination)) {
+        New-Item -ItemType Directory -Force -Path (Split-Path $destination -Parent) | Out-Null
+        Copy-Item -LiteralPath $_.FullName -Destination $destination
+    }
+}
 Copy-Item -Path (Join-Path $repoRoot 'modules\*') -Destination (Join-Path $serverRoot 'modules') -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $repoRoot 'docker\docker-compose.yml') -Destination $serverRoot -Force
+Copy-Item -LiteralPath (Join-Path $repoRoot 'docker\Dockerfile.llm-chatter') -Destination (Join-Path $serverRoot 'apps\docker\Dockerfile.llm-chatter') -Force
 
 $envFile = Join-Path $serverRoot '.env'
 $privateEnvFile = Join-Path $repoRoot '.env'

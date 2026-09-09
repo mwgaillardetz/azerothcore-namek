@@ -6,6 +6,25 @@
 # changes there instead.
 
 services:
+  ac-llm-chatter-bridge:
+    container_name: ac-llm-chatter-bridge
+    build:
+      context: ./modules/mod-llm-chatter/tools
+      dockerfile: ../../../apps/docker/Dockerfile.llm-chatter
+    restart: unless-stopped
+    init: true
+    networks:
+      - ac-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${DOCKER_VOL_ETC:-./env/dist/etc}/modules:/config:ro
+      - ac-llm-chatter-logs:/logs
+    command: ["python", "llm_chatter_bridge.py", "--config", "/config/mod_llm_chatter.conf"]
+    depends_on:
+      ac-database:
+        condition: service_healthy
+
   ac-database:
     container_name: ac-database
     image: mysql:8.4
@@ -208,6 +227,7 @@ services:
         condition: service_healthy
 
 volumes:
+  ac-llm-chatter-logs:
   ac-database:
   ac-client-data:
   # Used for dev server

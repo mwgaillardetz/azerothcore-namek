@@ -6,3 +6,4 @@ runtime/data/
 *.sql.gz
 __pycache__/
 *.pyc
+runtime/etc/

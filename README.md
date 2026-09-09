@@ -48,6 +48,46 @@ The active configuration is under `runtime\etc` after setup. The server listens 
 | `mod-transmog` | Transmogrification |
 | `mod-ale` | AzerothCore Lua Engine support |
 
+## LLM chatter bridge
+
+`docker/docker-compose.yml` includes `ac-llm-chatter-bridge`, the Python worker
+that turns server events into bot dialogue. Setup copies its Dockerfile into
+the server checkout and uses the module sources already saved in this repository.
+The service restarts automatically with Docker and keeps reports in a named volume.
+
+For a fresh setup, first run `setup.ps1 -SkipBuild` to prepare the files. Edit
+`runtime/etc/modules/mod_llm_chatter.conf` locally and fill in:
+
+```ini
+LLMChatter.Provider = openai
+LLMChatter.Model = gpt-4o-mini
+LLMChatter.OpenAI.ApiKey = YOUR_FULL_OPENAI_API_KEY
+LLMChatter.Database.Password = YOUR_DATABASE_PASSWORD
+```
+
+Use the full key without quotes. The database password must match `.env`.
+Then run `setup.ps1` normally to build and start the stack. Runtime configs are
+ignored by Git and preserved when setup runs again; `config/` contains only
+templates with blank credential fields. Never put your key in those templates.
+
+For an existing installation, run `setup.ps1 -SkipBuild`, set the runtime key
+and password, then run these commands from the `azerothcore-wotlk` directory
+with the database already running:
+
+```text
+docker compose up -d --build --no-deps ac-llm-chatter-bridge
+docker exec ac-llm-chatter-bridge python chatter_healthcheck.py --config /config/mod_llm_chatter.conf
+```
+
+The health check includes a small live API request. After changing the runtime
+key or model, apply it with `docker compose restart ac-llm-chatter-bridge`.
+Inspect output with `docker compose logs --tail=100 ac-llm-chatter-bridge`.
+Test in-game delivery by sending a party message while grouped with bots.
+
+Worldserver must be built with Playerbots and LLM Chatter for bot login and
+dialogue to work; a stock upstream image does not contain this module collection.
+Keep database backups when recreating the stack. The bridge does not replace them.
+
 ## Custom bot personalities
 
 My personality catalog and seeding tool are under `tools\llm-chatter\bot-profiles`. The generator creates deterministic modern US-based personalities for every character on an `RNDBOT` account: 70% everyday players, 25% celebrity-inspired fictional personalities, and 5% wildcards.
