@@ -277,16 +277,14 @@ PerfMonitorOperation::PerfMonitorOperation(PerformanceData* data, std::string co
                                                          PerformanceStack* stack)
     : data(data), name(name), stack(stack)
 {
-    started = (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()))
-                  .time_since_epoch();
+    started = std::chrono::steady_clock::now();
 }
 
 void PerfMonitorOperation::finish()
 {
-    std::chrono::microseconds finished =
-        (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()))
-            .time_since_epoch();
-    uint64 elapsed = (finished - started).count();
+    uint64 elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
+                         std::chrono::steady_clock::now() - started)
+                         .count();
 
     std::lock_guard<std::mutex> guard(data->lock);
     if (elapsed > 0)

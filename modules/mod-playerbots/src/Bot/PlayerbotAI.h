@@ -350,6 +350,7 @@ public:
     void AddHandler(uint16 opcode, std::string const handler);
     void Handle(ExternalEventHelper& helper);
     void AddPacket(WorldPacket const& packet);
+    bool HasPackets() const { return !queue.empty(); }
 
 private:
     std::map<uint16, std::string> handlers;

@@ -475,12 +475,13 @@ void PlayerbotAI::UpdateAIInternal([[maybe_unused]] uint32 elapsed, bool minimal
     if (!bot->GetMap())
         return; // instances are created and destroyed on demand
 
-    // kinda expensive call to make on every single updateAI, do we really need this information?
-    std::string const mapString = WorldPosition(bot).isOverworld() ? std::to_string(bot->GetMapId()) : "I";
-    PerfMonitorOperation* pmo =
-        sPerfMonitor.start(PERF_MON_TOTAL, "PlayerbotAI::UpdateAIInternal " + mapString);
-
-    ExternalEventHelper helper(aiObjectContext);
+    PerfMonitorOperation* pmo = nullptr;
+    if (sPlayerbotAIConfig.perfMonEnabled)
+    {
+        char const* mapType = WorldPosition(bot).isOverworld() ? nullptr : "I";
+        std::string mapName = mapType ? mapType : std::to_string(bot->GetMapId());
+        pmo = sPerfMonitor.start(PERF_MON_TOTAL, "PlayerbotAI::UpdateAIInternal " + mapName);
+    }
 
     // chat replies
     for (auto it = chatReplies.begin(); it != chatReplies.end();)
@@ -540,9 +541,14 @@ void PlayerbotAI::UpdateAIInternal([[maybe_unused]] uint32 elapsed, bool minimal
         return;
     }
 
-    botOutgoingPacketHandlers.Handle(helper);
-    masterIncomingPacketHandlers.Handle(helper);
-    masterOutgoingPacketHandlers.Handle(helper);
+    if (botOutgoingPacketHandlers.HasPackets() || masterIncomingPacketHandlers.HasPackets() ||
+        masterOutgoingPacketHandlers.HasPackets())
+    {
+        ExternalEventHelper helper(aiObjectContext);
+        botOutgoingPacketHandlers.Handle(helper);
+        masterIncomingPacketHandlers.Handle(helper);
+        masterOutgoingPacketHandlers.Handle(helper);
+    }
 
     DoNextAction(minimal);
 
@@ -552,6 +558,9 @@ void PlayerbotAI::UpdateAIInternal([[maybe_unused]] uint32 elapsed, bool minimal
 
 void PlayerbotAI::HandleCommands()
 {
+    if (chatCommands.empty())
+        return;
+
     ExternalEventHelper helper(aiObjectContext);
 
     for (auto it = chatCommands.begin(); it != chatCommands.end();)

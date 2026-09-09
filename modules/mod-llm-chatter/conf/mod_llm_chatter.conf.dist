@@ -289,7 +289,7 @@ LLMChatter.Anthropic.ApiKey = sk-ant-xxxxx
 #       Your OpenAI API key (starts with sk-)
 #       Get one at: https://platform.openai.com/api-keys
 #
-LLMChatter.OpenAI.ApiKey =
+LLMChatter.OpenAI.ApiKey = YOUR_OPENAI_API_KEY
 
 ###############################################################################
 # GOOGLE SETTINGS [BRIDGE] (only needed if Provider = google)

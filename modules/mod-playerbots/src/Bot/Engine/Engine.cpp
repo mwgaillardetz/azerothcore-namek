@@ -167,8 +167,11 @@ bool Engine::DoNextAction(Unit* /*unit*/, uint32 /*depth*/, bool minimal)
         float relevance = basket->getRelevance();  // for reference
         bool skipPrerequisites = basket->isSkipPrerequisites();
 
-        if (minimal && (relevance < 100))
-            continue;
+        // The queue is relevance ordered. If its highest-priority action is below
+        // the minimal-mode threshold, every remaining action is too. The old
+        // continue re-checked the same basket for the rest of the iteration budget.
+        if (minimal && relevance < 100)
+            break;
 
         Event event = basket->getEvent();
         ActionNode* actionNode = queue.Pop();  // NOTE: Pop() deletes basket

@@ -22,6 +22,10 @@ account set gmlevel USERNAME 3 -1
 
 The active configuration is under `runtime\etc` after setup. The server listens on ports `3724` and `8085` by default.
 
+Custom server images use `namek/*:local` and cannot be pulled from the upstream
+registry. See [migration and recovery checks](docker/MIGRATION.md) before moving
+the stack. Set `DOCKER_BUILD_JOBS` in `.env` to control build concurrency.
+
 ## Included modules
 
 | Module | What I use it for |

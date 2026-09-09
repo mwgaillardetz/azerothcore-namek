@@ -1,7 +1,10 @@
 #include "Player.h"
+#include "SpellMgr.h"
 #include "WorldSession.h"
 
 #include "mod_learnspells.h"
+
+#include <vector>
 
 namespace
 {
@@ -69,6 +72,26 @@ void LearnSpells::LearnAllSpells(Player* player)
 
 void LearnSpells::RemoveOverLevelSpells(Player* player)
 {
+    std::vector<uint32> overLevelSpells;
+    overLevelSpells.reserve(player->GetSpellMap().size());
+
+    for (auto const& [spellId, playerSpell] : player->GetSpellMap())
+    {
+        if (playerSpell->State == PLAYERSPELL_REMOVED || playerSpell->State == PLAYERSPELL_TEMPORARY)
+            continue;
+
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId);
+        if (spellInfo && spellInfo->SpellLevel > player->GetLevel())
+            overLevelSpells.push_back(spellId);
+    }
+
+    // Some invalid ranks can be left behind by systems outside this module,
+    // so validating only IDs in SpellsList is insufficient. Remove from a
+    // snapshot because removeSpell can also mutate other ranks in the chain.
+    for (uint32 spellId : overLevelSpells)
+        if (player->HasSpell(spellId))
+            player->removeSpell(spellId, SPEC_MASK_ALL, false);
+
     for (auto const& spellList : SpellsList)
     {
         for (auto const& spell : spellList)

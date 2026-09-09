@@ -52,7 +52,7 @@ private:
     PerformanceData* data;
     std::string const name;
     PerformanceStack* stack;
-    std::chrono::microseconds started;
+    std::chrono::steady_clock::time_point started;
 };
 
 class PerfMonitor

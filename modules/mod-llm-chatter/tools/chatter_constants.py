@@ -1607,6 +1607,22 @@ MSG_TYPE_SPELL = 100         # 5% chance (96-100)
 # Also excluded: items, quests, quest rewards, spells, trade
 # (handled by dedicated message-type paths).
 AMBIENT_CHAT_TOPICS = [
+    # Real life behind the keyboard
+    'talking about work being busy or unusually quiet today',
+    'mentioning an annoying helpdesk ticket or production incident',
+    'talking about an upcoming deployment or being on call',
+    'complaining about homework, an exam, or a group project',
+    'talking about rent, groceries, bills, or saving money',
+    'mentioning their partner, kids, parents, roommate, or pets',
+    'talking about dinner plans or something they recently cooked',
+    'discussing a movie, television show, podcast, or video game',
+    'talking about a concert, festival, or band they saw live',
+    'mentioning weekend plans, a party, or meeting friends later',
+    'complaining about traffic, commuting, weather, or poor sleep',
+    'talking casually about beer, cocktails, weed, gummies, or vaping',
+    'sharing a small piece of practical life advice',
+    'checking how another player is doing in real life',
+    'making a dry observation about adult life',
     # Environment / Zone
     'commenting on the scenery or surroundings',
     'noticing something interesting in the zone',
@@ -2021,6 +2037,38 @@ PROXIMITY_CHAT_TOPICS = [
     'talking about mosquitoes near the canal',
     'mentioning a rude merchant at the market',
     'grumbling about the price of firewood',
+]
+
+# Everyday subjects for player-bot /say chatter in normal mode.  Keep this
+# separate from PROXIMITY_CHAT_TOPICS: that older pool intentionally contains
+# town rumors, omens, taverns, kings, and other material suitable for RP mode.
+HUMAN_PROXIMITY_CHAT_TOPICS = [
+    'asking how everyone is doing tonight',
+    'mentioning a long day at work and finally getting time to play',
+    'complaining about an annoying meeting or customer',
+    'talking about a helpdesk ticket that should have been an email',
+    'mentioning a deployment, outage, or on-call shift',
+    'talking about a college class, exam, or group assignment',
+    'complaining about traffic or the commute home',
+    'talking about rent, groceries, bills, or trying to save money',
+    'mentioning what they made or ordered for dinner',
+    'talking about coffee, energy drinks, or being tired',
+    'mentioning their partner, kids, parents, roommate, or pets',
+    'talking about weekend plans or meeting friends later',
+    'mentioning a concert, festival, comedian, or band they saw',
+    'discussing a movie, television show, podcast, or another game',
+    'talking about beer, cocktails, weed, gummies, joints, or vaping',
+    'mentioning a workout, sore back, poor sleep, or a doctor visit',
+    'sharing a funny minor mistake they made today',
+    'asking for ordinary advice about work, school, or relationships',
+    'making a dry joke about getting older or adult responsibilities',
+    'talking about a hobby, home project, car repair, or new gadget',
+    'checking whether anyone needs help with a quest or game mechanic',
+    'asking what level range or zone would make sense next',
+    'discussing their class rotation, gear, professions, or leveling plan',
+    'talking about the current dungeon without pretending to live in it',
+    'reacting casually to something that just happened in the game',
+    'making relaxed small talk while waiting for the group',
 ]
 
 # News-style topics for "people talking about current events"

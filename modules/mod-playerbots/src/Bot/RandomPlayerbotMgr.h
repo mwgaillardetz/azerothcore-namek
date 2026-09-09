@@ -120,8 +120,8 @@ public:
     void OnPlayerLogin(Player* player);
     void OnPlayerLoginError(uint32 bot);
     Player* GetRandomPlayer();
-    std::vector<Player*> GetPlayers() { return players; };
-    PlayerBotMap GetAllBots() { return playerBots; };
+    std::vector<Player*> const& GetPlayers() const { return players; };
+    PlayerBotMap const& GetAllBots() const { return playerBots; };
     void PrintStats();
     double GetBuyMultiplier(Player* bot);
     double GetSellMultiplier(Player* bot);

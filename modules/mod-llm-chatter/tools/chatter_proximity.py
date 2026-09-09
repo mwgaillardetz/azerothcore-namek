@@ -6,6 +6,7 @@ from typing import Dict, List, Optional
 
 from chatter_constants import (
     PROXIMITY_CHAT_TOPICS,
+    HUMAN_PROXIMITY_CHAT_TOPICS,
     NEWS_CHAT_TOPICS,
     SPORTS_CHAT_TOPICS,
 )
@@ -254,6 +255,14 @@ def _single_prompt(
         mode == 'normal'
         and not bool(speaker.get('is_npc'))
     )
+    if human_style and not player_message and not last_message:
+        topic = pick_personality_topic(
+            speaker.get('name', ''),
+            int(speaker.get('bot_guid', 0) or 0),
+            base_pool=HUMAN_PROXIMITY_CHAT_TOPICS,
+            news_pool=[],
+            sports_pool=[],
+        )
     opening = (
         "You are an ordinary real person playing World of Warcraft. Write a "
         "very short, natural /say line. Do not perform your character's race "
@@ -361,6 +370,14 @@ def _conversation_prompt(
         mode == 'normal'
         and all(not bool(p.get('is_npc')) for p in participants)
     )
+    if human_style and participants:
+        topic = pick_personality_topic(
+            participants[0].get('name', ''),
+            int(participants[0].get('bot_guid', 0) or 0),
+            base_pool=HUMAN_PROXIMITY_CHAT_TOPICS,
+            news_pool=[],
+            sports_pool=[],
+        )
 
     # Check backstory config once
     _bs_enabled = False
