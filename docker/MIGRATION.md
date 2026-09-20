@@ -59,9 +59,8 @@ worldserver image replacement.
 1. Back up and restore all four databases: `acore_auth`, `acore_characters`,
    `acore_world`, and `acore_playerbots`. Keep a private backup of `.env` and
    runtime configs as well. Preserve or restore client data.
-2. Run `setup.ps1 -SkipBuild` on Windows to prepare the checkout, then restore
-   private runtime configs. On Linux, prepare the same checkout/modules,
-   Dockerfiles, Compose file, `.env`, and runtime directories.
+2. Run `./setup.sh --skip-build` on Linux to prepare the checkout, then restore
+   private runtime configs. On Windows, use `setup.ps1 -SkipBuild`.
    If Docker volumes were restored outside Compose, reference those exact names
    as external volumes in the local override. The recovered Linux installation
    does this for its database, client data, and existing runtime logs.

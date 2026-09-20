@@ -6,11 +6,13 @@ A custom containerized rendition of World of Warcraft - Wrath of the Litch King 
 
 ## Server setup
 
-1. Install Git and Docker Desktop.
+The primary setup runs on Linux with Docker Engine and the Compose plugin.
+
+1. Install Git, Python 3, Docker Engine, and the Docker Compose plugin. Make sure your user can run `docker compose`.
 2. Clone this repository.
-3. Copy `.env.example` to `.env`, choose a database password, and keep `.env` private.
-4. Run `powershell -ExecutionPolicy Bypass -File .\setup.ps1` from the repository folder.
-5. Wait for the database import and worldserver build to finish.
+3. Copy `.env.example` to `.env`, choose a database password, and keep `.env` private. If you use a nondefault database port or external Docker volumes, set those in `.env` before setup.
+4. Run `./setup.sh --skip-build` from the repository folder. Edit the private `runtime/etc` configuration, including the chatter credentials below.
+5. Run `./setup.sh` to build and start the stack.
 6. Create an account from the worldserver console:
 
 ```text
@@ -18,7 +20,9 @@ account create USERNAME PASSWORD
 account set gmlevel USERNAME 3 -1
 ```
 
-The active configuration is under `runtime\etc` after setup. The server listens on ports `3724` and `8085` by default.
+The active configuration is under `runtime/etc` after setup. The server listens on ports `3724` and `8085` by default. Keep the repository and its `runtime` directory on the server because Compose bind mounts those files.
+
+For Windows with Docker Desktop, use `powershell -ExecutionPolicy Bypass -File .\setup.ps1 -SkipBuild` and then run the same command without `-SkipBuild` after editing the private config.
 
 Custom server images use `namek/*:local` and cannot be pulled from the upstream
 registry. See [migration and recovery checks](docker/MIGRATION.md) before moving
@@ -57,7 +61,7 @@ that turns server events into bot dialogue. Setup copies its Dockerfile into
 the server checkout and uses the module sources already saved in this repository.
 The service restarts automatically with Docker and keeps reports in a named volume.
 
-For a fresh setup, first run `setup.ps1 -SkipBuild` to prepare the files. Edit
+For a fresh setup, first run `./setup.sh --skip-build` to prepare the files. Edit
 `runtime/etc/modules/mod_llm_chatter.conf` locally and fill in:
 
 ```ini
@@ -68,11 +72,11 @@ LLMChatter.Database.Password = YOUR_DATABASE_PASSWORD
 ```
 
 Use the full key without quotes. The database password must match `.env`.
-Then run `setup.ps1` normally to build and start the stack. Runtime configs are
+Then run `./setup.sh` to build and start the stack. Runtime configs are
 ignored by Git and preserved when setup runs again; `config/` contains only
 templates with blank credential fields. Never put your key in those templates.
 
-For an existing installation, run `setup.ps1 -SkipBuild`, set the runtime key
+For an existing installation, run `./setup.sh --skip-build`, set the runtime key
 and password, then run these commands from the `azerothcore-wotlk` directory
 with the database already running:
 
@@ -92,30 +96,30 @@ Keep database backups when recreating the stack. The bridge does not replace the
 
 ## Custom bot personalities
 
-My personality catalog and seeding tool are under `tools\llm-chatter\bot-profiles`. The generator creates deterministic modern US-based personalities for every character on an `RNDBOT` account: 70% everyday players, 25% celebrity-inspired fictional personalities, and 5% wildcards.
+My personality catalog and seeding tool are under `tools/llm-chatter/bot-profiles`. The generator creates deterministic modern US-based personalities for every character on an `RNDBOT` account: 70% everyday players, 25% celebrity-inspired fictional personalities, and 5% wildcards.
 
 Install the Python dependency once:
 
-```powershell
-py -m pip install -r .\tools\requirements.txt
+```bash
+python3 -m pip install -r ./tools/requirements.txt
 ```
 
 Use the same database password configured in the private `.env` file. Preview five generated profiles without changing the database:
 
-```powershell
-py .\tools\llm-chatter\bot-profiles\seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --sample 5
+```bash
+python3 ./tools/llm-chatter/bot-profiles/seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --sample 5
 ```
 
 Apply the personalities:
 
-```powershell
-py .\tools\llm-chatter\bot-profiles\seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --apply
+```bash
+python3 ./tools/llm-chatter/bot-profiles/seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --apply
 ```
 
-Before applying changes, the script backs up the complete `llm_bot_identities` table under `tools\llm-chatter\bot-profiles\backups`. The tracked `catalog\personality-catalog.json` keeps personalities associated with character names, so they survive a Playerbots character or account rebuild. After intentionally rebuilding the bot pool, I can remove obsolete identity rows with:
+Before applying changes, the script backs up the complete `llm_bot_identities` table under `tools/llm-chatter/bot-profiles/backups`. The tracked `catalog/personality-catalog.json` keeps personalities associated with character names, so they survive a Playerbots character or account rebuild. After intentionally rebuilding the bot pool, I can remove obsolete identity rows with:
 
-```powershell
-py .\tools\llm-chatter\bot-profiles\seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --apply --prune-orphans
+```bash
+python3 ./tools/llm-chatter/bot-profiles/seed_modern_bot_profiles.py --password "YOUR_DATABASE_PASSWORD" --apply --prune-orphans
 ```
 
 The database defaults to `127.0.0.1:3306`; `--host`, `--port`, and `--user` override that when needed.
