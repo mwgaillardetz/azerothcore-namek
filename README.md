@@ -6,8 +6,6 @@ A custom containerized rendition of World of Warcraft - Wrath of the Litch King 
 
 ## Server setup
 
-I run this with Docker Desktop on Windows (I know 😞).
-
 1. Install Git and Docker Desktop.
 2. Clone this repository.
 3. Copy `.env.example` to `.env`, choose a database password, and keep `.env` private.
